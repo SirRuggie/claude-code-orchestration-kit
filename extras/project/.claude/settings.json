@@ -1,0 +1,34 @@
+{
+  "env": {
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1"
+  },
+  "permissions": {
+    "deny": [
+      "Edit(.claude/scratch/*/briefs/**)",
+      "Write(.claude/scratch/*/briefs/**)",
+      "Edit(.claude/scratch/_closed/**)",
+      "Write(.claude/scratch/_closed/**)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(attrib -R:*)",
+      "Bash(chmod +w:*)",
+      "Bash(chmod a+w:*)",
+      "Bash(chmod u+w:*)"
+    ],
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Read(.claude/scratch/**)",
+      "Bash(mkdir:*)",
+      "Bash(attrib +R:*)",
+      "Bash(chmod a-w:*)"
+    ]
+  }
+}

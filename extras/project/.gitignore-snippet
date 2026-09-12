@@ -1,0 +1,3 @@
+# Claude task buckets — working context, never tracked.
+# Nothing operational, no credentials, no production data belongs in here anyway.
+.claude/scratch/
