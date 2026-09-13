@@ -31,7 +31,7 @@ cp core/commands/*.md ~/.claude/commands/
 |---|---|
 | `core/CLAUDE.md` | The rules. This is the only place that defines the brief format (six sections), the bucket, and the rule that every agent has a pinned model. |
 | `core/agents/` | The five agents, one file each: scout `haiku`, researcher `sonnet`, builder `sonnet`, refuter `opus`, debugger `opus`. Each file pins the model, the **effort**, and the tools. |
-| `core/commands/task-session.md` | `/task-session <slug>` creates or reopens the bucket for one task. |
+| `core/commands/task.md` | `/task` shows every open task. `/task <sentence>` continues one or starts a new one. |
 
 The **Response contract** section at the top of `core/CLAUDE.md` is one person's reply
 preferences (answer length, troubleshooting order). Edit it to match yours.
@@ -67,18 +67,23 @@ spawn a subagent and ask it whether it has the `Agent` tool. It should say no.
 
 ## Your first task
 
-The command takes a slug, then a one-line description of the task.
+You do not name tasks or run a command for each step. You say what you want, and Claude
+keeps the bookkeeping.
 
-1. In your repo, run `/task-session <slug> <one line saying what to do>`. Claude creates
-   the bucket, shows the scope, and waits for you to confirm it.
-2. Claude writes a brief for the builder to `briefs/builder-01.md`, shows it to you, and
-   spawns the builder. With extras installed: `/brief <slug> builder <one line>`.
-3. The builder makes the change, runs the tests, and writes `reports/builder-01.md`.
-4. Claude spawns the refuter with the same brief. The refuter reads the code change, reruns
+1. In your repo, type `/task fix the broken menu on the settings page`. Claude opens a
+   bucket for it, names it `broken-settings-menu`, shows the scope, and waits for your go.
+2. Claude writes a brief for the builder and spawns it. You do not see the brief unless you
+   ask. The builder makes the change, runs the tests, and writes a report.
+3. Claude spawns the refuter with the same brief. The refuter reads the code change, reruns
    the tests, and answers ACCEPT or REWORK with a list of must-fix items.
-5. On REWORK, Claude writes a new brief with the must-fix list and goes back to step 2.
-   On ACCEPT, you decide what happens next. With extras: `/task-close <slug>` archives
-   the bucket.
+4. On REWORK, Claude writes a new brief with the must-fix list and goes back to step 2.
+   On ACCEPT, Claude closes the bucket and tells you in one line.
+5. Say the next thing: "now the time display is wrong". Claude sees it is a different
+   task, opens a new bucket, and starts again. Ten tasks in a day means ten buckets. You
+   named none of them.
+
+Tomorrow, type `/task` with nothing after it. Claude lists every bucket, what is open,
+what is blocked on you, and the next action for each.
 
 ## Where the files go
 
@@ -91,7 +96,7 @@ about a project go in that project's repo.**
 |---|---|
 | `CLAUDE.md` | Loaded automatically in every session and into every subagent. Your rules follow you to every repo. |
 | `agents/*.md` | The five agents from the table above. One file each, so each one's tool list is enforced. |
-| `commands/task-session.md` | Defines `/task-session`. It is a command because a habit is easy to forget and a command is not. |
+| `commands/task.md` | Defines `/task`. The dashboard for every bucket. |
 
 These files describe how *you* like to work. They say nothing about any codebase, so they
 do not belong in a repo.
@@ -167,8 +172,10 @@ If you add something to `CLAUDE.md`, add the rule, not the reason.
 
 ## The bucket
 
-Each task gets one bucket inside the repo you are working in. Agents share information
-through these files instead of through your chat:
+Each task gets one bucket inside the repo you are working in. Claude opens it when a new
+task starts and closes it when the refuter accepts. A file called `INDEX.md` next to the
+buckets lists all of them with status and next action. Agents share information through
+these files instead of through your chat:
 
 ```
 .claude/scratch/<slug>/
@@ -189,7 +196,6 @@ Add `.claude/scratch/` to `.gitignore`.
 ## extras: install only if you need them
 
 ```bash
-cp extras/commands/*.md                 ~/.claude/commands/
 cp extras/project/CLAUDE.md             <repo>/CLAUDE.md            # then fill in the placeholders
 cp extras/project/.claude/settings.json <repo>/.claude/settings.json
 cat extras/project/.gitignore-snippet  >> <repo>/.gitignore
@@ -201,9 +207,6 @@ folder you start in, so starting from a subfolder turns those rules off.
 
 | | |
 |---|---|
-| `commands/brief.md` | `/brief <slug> <agent> <objective>` writes the brief file, makes it read-only, and spawns the agent. |
-| `commands/task-status.md` | Compares the bucket, the repo, and the list of agents. Checks that `launched = terminal + running + unknown`. |
-| `commands/task-close.md` | Turns a finished bucket into a handoff note and archives it. |
 | `project/CLAUDE.md` | A template for a repo's own CLAUDE.md: commands table, layout, danger list, list of past defects. |
 | `project/.claude/settings.json` | Blocks Edit/Write on `briefs/**`. Asks before `push`, `reset --hard`, and removing the read-only flag. Stops subagents spawning subagents. |
 | `project/.claude/scratch/_TEMPLATE/` | Longer versions of the bucket files, with STOP/LOG/DEFER classes for findings. |

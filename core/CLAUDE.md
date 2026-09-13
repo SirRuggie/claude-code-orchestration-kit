@@ -78,14 +78,23 @@ Plus an output budget: "Under N tokens. Cite `file:line`. No pasted diffs."
 
 ## Task buckets
 
-A bucket is the folder for one task. Its slug is a short name: lowercase, numbers, hyphens,
-no spaces. `/task-session <slug>` creates `.claude/scratch/<slug>/` — `STATE.md`
-(replaced each update), `FINDINGS.md` and `DECISIONS.md` (append-only), `briefs/`,
-`reports/`.
+A bucket is the folder for one task: `.claude/scratch/<slug>/` with `STATE.md` (replaced
+each update), `FINDINGS.md` and `DECISIONS.md` (append-only), `briefs/`, `reports/`. The
+slug is a short name: lowercase, numbers, hyphens, no spaces. `.claude/scratch/INDEX.md`
+lists every bucket with its status and next action.
+
+- **One task, one bucket.** Same objective = same bucket. Different objective = new bucket,
+  even if the files overlap. Unsure = ask one question.
+- I open buckets myself when work on a new task starts, and name the slug from the
+  objective. I show the slug and scope, then wait for confirmation before spawning.
+- I update `INDEX.md` whenever a bucket's status or next action changes.
+- When the objective is met I close the bucket: `STATE.md` CLOSED, move to `_closed/`, mark
+  DONE in the index. Never delete a bucket.
+- `/task` with no words shows the index. `/task <sentence>` continues or opens a bucket.
 
 Agents working a bucket must:
-- **Read `DECISIONS.md` before changing anything.** A change that would reverse a recorded
-  decision means **stop and report**, never re-decide.
+- **Read `DECISIONS.md` before changing anything.** A change that would reverse a decision
+  recorded there means **stop and report**, never re-decide.
 - Record findings when discovered, not at session end.
 - Update the bucket and write `reports/<agent>-NN.md` (NN = the brief's number) before
   stopping.

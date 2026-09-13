@@ -56,8 +56,8 @@ The things in this repo that cause real damage. One line each, direct.
 
 ## Task buckets
 
-Multi-agent work in this repo uses `/task-session <slug>`, which creates
-`.claude/scratch/<slug>/`. Buckets are git-ignored; nothing operational, no credentials
+Multi-agent work in this repo uses buckets under `.claude/scratch/<slug>/`, opened by
+Claude when a new task starts, or by `/task <sentence>`. Buckets are git-ignored; nothing operational, no credentials
 and no production data goes in them, or in any tracked doc.
 
 ## Handoff

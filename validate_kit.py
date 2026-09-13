@@ -69,7 +69,7 @@ print('=== 3. COMMAND FRONTMATTER ===')
 CMDKEYS = {'description', 'when_to_use', 'argument-hint', 'arguments', 'disable-model-invocation',
            'user-invocable', 'allowed-tools', 'disallowed-tools', 'model', 'effort', 'context',
            'agent', 'background', 'hooks', 'shell', 'metadata', 'license', 'compatibility'}
-for p in sorted(glob.glob('core/commands/*.md') + glob.glob('extras/commands/*.md')):
+for p in sorted(glob.glob('core/commands/*.md')):
     d, s = fm(p)
     n = os.path.basename(p)
     chk(d is not None and 'description' in d, f'{n}: has description')
@@ -93,7 +93,7 @@ for f in files:
             idx[n].add(f)
 dupes = {k: v for k, v in idx.items() if len(v) > 1}
 print(f'  files scanned: {len(files)}   duplicated substantive lines: {len(dupes)}')
-BUCKET_OK = {'core/CLAUDE.md', 'core/commands/task-session.md'}
+BUCKET_OK = {'core/CLAUDE.md', 'core/commands/task.md'}
 unexplained = []
 for k, v in sorted(dupes.items(), key=lambda x: -len(x[1])):
     reason = ''
